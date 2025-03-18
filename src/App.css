@@ -1,0 +1,63 @@
+:root {
+  --primary-color: #FF914D; /* Warm Orange */
+  --secondary-color: #FFD700; /* Golden Yellow */
+  --background-color: #FFF8E1; /* Soft Cream */
+  --text-color: #333333; /* Dark Gray */
+  --success-color: #4CAF50; /* Green */
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Raleway';
+}
+
+/* Navbar */
+.nav-bar {
+  background-color: var(--primary-color) !important;
+}
+
+.nav-bar-brand {
+  font-weight: bold;
+  color: white !important;
+}
+
+.nav-link {
+  color: white !important;
+}
+.nav-link:hover {
+  color: var(--secondary-color) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Footer */
+.footer {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Cards */
+.card {
+  background-color: white;
+  border: 1px solid var(--primary-color);
+}
+
+.card-title {
+  color: var(--primary-color);
+}
+
+.card-text {
+  color: var(--text-color);
+}
