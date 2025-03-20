@@ -25,7 +25,7 @@ function Home() {
       </div>
 
       {/* Call to Action */}
-      <a href="/login" className="home-button">Explore Available Pets 🐶🐱</a>
+      <a href="/pets" className="home-button">Explore Available Pets 🐶🐱</a>
     </div>
   );
 }

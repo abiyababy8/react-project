@@ -19,8 +19,8 @@ function Nav() {
                     <i className="fa-solid fa-user fa-2x nav-link" onClick={() => setShowDropDown(!showDropDown)}></i>
                     {showDropDown && (
                         <div className="dropdown-menu-custom">
-                            <a href="/login" className="dropdown-item">Login</a>
-                            <a href="/signup" className="dropdown-item">Sign Up</a>
+                            <a href="/login" className="dropdown-item">Log In</a>
+                            <a href="/register" className="dropdown-item">Register</a>
                         </div>
                     )}
                 </div>
