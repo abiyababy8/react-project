@@ -9,7 +9,7 @@ function App() {
     <>
       <Nav/>
       {/* <Routes>
-        <Route path='/' element={}></Route>
+        <Route path='/home' element={}></Route>
       </Routes> */}
       <Footer/>
     </>

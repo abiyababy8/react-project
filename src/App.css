@@ -61,3 +61,36 @@ body {
 .card-text {
   color: var(--text-color);
 }
+/* User dropdown positioning */
+.user-dropdown {
+  position: relative;
+}
+
+/* Compact Dropdown Menu */
+.dropdown-menu-custom {
+  position: absolute;
+  right: 0;
+  top: 40px; /* Position below the user icon */
+  background-color: var(--primary-color);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+  width: 150px; /* Set a compact width */
+  z-index: 1000;
+}
+
+/* Dropdown Items */
+.dropdown-item {
+  display: block;
+  padding: 10px;
+  color: black;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Hover effect */
+.dropdown-item:hover {
+  background-color: var(--secondary-color);
+  color: white;
+}
