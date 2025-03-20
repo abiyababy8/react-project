@@ -1,6 +1,9 @@
-import { Routes } from "react-router-dom"
-import Footer from "./Footer"
-import Nav from "./Nav"
+import { Routes,Route } from "react-router-dom"
+import Footer from "./components/Footer"
+import Nav from "./components/Nav"
+import Home from "./pages/Home"
+import Pets from "./pages/Pets"
+import PetDetails from "./pages/PetDetails"
 
 
 function App() {
@@ -8,9 +11,11 @@ function App() {
   return (
     <>
       <Nav/>
-      {/* <Routes>
-        <Route path='/home' element={}></Route>
-      </Routes> */}
+      <Routes>
+        <Route path='/' element={<Home/>}></Route>
+        <Route path='/pets' element={<Pets/>}></Route>
+        <Route path="/pets/:id" element={<PetDetails/>}></Route>
+      </Routes>
       <Footer/>
     </>
   )
