@@ -4,6 +4,7 @@ import Nav from "./components/Nav"
 import Home from "./pages/Home"
 import Pets from "./pages/Pets"
 import PetDetails from "./pages/PetDetails"
+import Profile from "./pages/Profile"
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path='/' element={<Home/>}></Route>
         <Route path='/pets' element={<Pets/>}></Route>
         <Route path="/pets/:id" element={<PetDetails/>}></Route>
+        <Route path="/profile" element={<Profile/>}></Route>
       </Routes>
       <Footer/>
     </>
