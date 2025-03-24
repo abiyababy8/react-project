@@ -1,5 +1,4 @@
 import { React, useState } from 'react'
-import '../App.css'
 import { Link } from 'react-router-dom'
 function Nav() {
     const [showDropDown, setShowDropDown] = useState(false)
@@ -16,11 +15,13 @@ function Nav() {
                     </Link>
                 </div>
                 <div className="user-dropdown position-relative">
-                    <i className="fa-solid fa-user fa-2x nav-link" onClick={() => setShowDropDown(!showDropDown)}></i>
+                    <i className="fa-solid fa-user fa-2x" onClick={() => setShowDropDown(!showDropDown)}></i>
                     {showDropDown && (
                         <div className="dropdown-menu-custom">
-                            <a href="/login" className="dropdown-item">Log In</a>
-                            <a href="/register" className="dropdown-item">Register</a>
+                            <Link to="/admin" className="dropdown-items">Admin</Link>
+                            <Link to="/profile" className="dropdown-items">User</Link>
+                            <Link to="/login" className="dropdown-items">Log In</Link>
+                            <Link to="/register" className="dropdown-items">Register</Link>
                         </div>
                     )}
                 </div>

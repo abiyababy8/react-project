@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Row, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import '../App.css';
 
 function Register() {
     const [formData, setFormData] = useState({

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
@@ -25,7 +26,7 @@ function Home() {
       </div>
 
       {/* Call to Action */}
-      <a href="/pets" className="home-button">Explore Available Pets 🐶🐱</a>
+      <Link to="/login" className="home-button">Explore Available Pets 🐶🐱</Link>
     </div>
   );
 }

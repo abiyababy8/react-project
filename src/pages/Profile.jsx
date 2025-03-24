@@ -1,66 +1,313 @@
-import React, { useState } from 'react';
-import { Container, Card, Button, ListGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import '../App.css';
-import goldenRetriever from '../assets/golden-retriever.jpg';
-import tabbyCat from '../assets/tabby-cat.jpg';
-
-// Sample User Data (Replace with Real Data from Auth Context/API)
-const sampleUser = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    profilePicture: "data:image/png;base64,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",  // Placeholder image
-    adoptedPets: [
-        { id: 1, name: "Buddy", type: "Dog", image: goldenRetriever},
-        { id: 2, name: "Whiskers", type: "Cat", image: tabbyCat },
-    ],
-};
+import React, { useState } from "react";
+import { Table, Button, Container, Row, Col, Card, Form, Modal } from "react-bootstrap";
+import "../App.css";
 
 function Profile() {
-    const [user, setUser] = useState(sampleUser);
-    const navigate = useNavigate();
+  const [selectedSection, setSelectedSection] = useState("profile");
+  const [showFoundPetModal, setShowFoundPetModal] = useState(false);
+  const [showAddPetModal, setShowAddPetModal] = useState(false);
+  const [showLostPetModal, setShowLostPetModal] = useState(false);
+  const [showAdoptPetModal, setShowAdoptPetModal] = useState(false);
+  const [selectedLostPet, setSelectedLostPet] = useState(null);
+  const [selectedPetForAdoption, setSelectedPetForAdoption] = useState(null);
+  // Sample User Data
+  const user = { username: "john_doe", email: "john@example.com", phone: "123-456-7890" };
 
-    const handleEditProfile = () => {
-        alert("Edit Profile clicked! (Feature coming soon)");
-    };
+  // Sample Data for Pets
+  const myPets = [
+    { id: 1, name: "Buddy", type: "Dog", description: "Golden Retriever" },
+    { id: 2, name: "Whiskers", type: "Cat", description: "Playful tabby cat" }
+  ];
 
-    const handleLogout = () => {
-        alert("Logging out...");
-        navigate("/login"); // Redirect to Login Page after logout
-    };
+  const adoptionPets = [
+    { id: 3, name: "Luna", type: "Cat", description: "Adorable Persian cat" },
+    { id: 4, name: "Charlie", type: "Dog", description: "Friendly Beagle" }
+  ];
 
-    return (
-        <Container className="mt-5 d-flex justify-content-center mb-5">
-            <Card style={{ width: '25rem' }} className="shadow-lg text-center">
-                <Card.Img variant="top" src={user.profilePicture} className="rounded-circle mx-auto mt-3" style={{ width: "100px", height: "100px" }} />
-                <Card.Body>
-                    <Card.Title>{user.name}</Card.Title>
-                    <Card.Subtitle className="mb-3 text-muted">{user.email}</Card.Subtitle>
+  const lostPets = [
+    { id: 5, name: "Rocky", type: "Dog", description: "Black Labrador, last seen in park" },
+    { id: 6, name: "Milo", type: "Cat", description: "Grey tabby, lost near downtown" }
+  ];
 
-                    {/* Adopted/Favorite Pets Section */}
-                    <h5 className="mt-4">Adopted Pets 🐾</h5>
-                    {user.adoptedPets.length > 0 ? (
-                        <ListGroup>
-                            {user.adoptedPets.map((pet) => (
-                                <ListGroup.Item key={pet.id} className="d-flex align-items-center">
-                                    <img src={pet.image} alt={pet.name} className="rounded-circle me-3" style={{ width: "40px", height: "40px" }} />
-                                    {pet.name} ({pet.type})
-                                </ListGroup.Item>
-                            ))}
-                        </ListGroup>
-                    ) : (
-                        <p className="text-muted">No adopted pets yet.</p>
-                    )}
+  // Function to open the "Report Found Pet" modal
+  const handleReportFoundPet = (pet) => {
+    setSelectedLostPet(pet);
+    setShowFoundPetModal(true);
+  };
 
-                    {/* Action Buttons */}
-                    <div className="mt-4">
-                        <Button variant="warning" className="me-2" onClick={handleEditProfile}>Edit Profile</Button>
-                        <Button variant="danger" onClick={handleLogout}>Logout</Button>
-                    </div>
-                </Card.Body>
+  const handleAdoptPet = (pet) => {
+    setSelectedPetForAdoption(pet);
+    setShowAdoptPetModal(true);
+  };
+
+  return (
+    <Container fluid className="user-dashboard">
+      <Row>
+        {/* Sidebar */}
+        <Col md={3} className="sidebar">
+          <h3 className="text-center">User Dashboard</h3>
+          <ul className="sidebar-menu">
+            <li onClick={() => setSelectedSection("profile")}>View Profile</li>
+            <li onClick={() => setSelectedSection("myPets")}>View My Pets</li>
+            <li onClick={() => setSelectedSection("adoption")}>Adoption Section</li>
+            <li onClick={() => setSelectedSection("lostPets")}>Lost Pets Section</li>
+          </ul>
+        </Col>
+
+        {/* Main Content */}
+        <Col md={9} className="dashboard-content">
+          {selectedSection === "profile" && (
+            <Card className="p-4">
+              <h4>Profile Information</h4>
+              <p><strong>Username:</strong> {user.username}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Phone:</strong> {user.phone}</p>
+              <Button variant="primary">Edit Profile</Button>
             </Card>
-        </Container>
-    );
+          )}
+
+          {selectedSection === "myPets" && (
+            <>
+              <h4>My Pets</h4>
+
+              <Container>
+                <Row>
+                  {myPets.map((pet) => (
+                    <Col key={pet.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                      <Card className="shadow-sm">
+                        <Card.Body className="text-center">
+                          <Card.Title>{pet.name}</Card.Title>
+                          <Card.Text>{pet.description}</Card.Text>
+
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </Container>
+
+              {/* <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {myPets.map((pet) => (
+                    <tr key={pet.id}>
+                      <td>{pet.id}</td>
+                      <td>{pet.name}</td>
+                      <td>{pet.type}</td>
+                      <td>{pet.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table> */}
+            </>
+          )}
+
+          {/* Adoption Section - Includes Adopt & Give for Adoption */}
+          {selectedSection === "adoption" && (
+            <>
+              <h4>Adoption Section</h4>
+              <Row>
+                {adoptionPets.map((pet) => (
+                  <Col md={6} key={pet.id} className="mb-3">
+                    <Card>
+                      <Card.Body>
+                        <Card.Title>{pet.name}</Card.Title>
+                        <Card.Text>{pet.description}</Card.Text>
+                        <Button variant="success" onClick={() => handleAdoptPet(pet)}>Adopt</Button>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+              <hr />
+              <h4>Give a Pet for Adoption</h4>
+              <Button variant="primary" onClick={() => setShowAddPetModal(true)}>Add Pet</Button>
+            </>
+          )}
+
+          {/* Lost Pets Section - Includes View & Report Lost Pets */}
+          {selectedSection === "lostPets" && (
+            <>
+              <h4>Lost Pets Section</h4>
+
+              <Container>
+                <Row>
+                  {lostPets.map((pet) => (
+                    <Col key={pet.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                      <Card className="shadow-sm">
+                        <Card.Body className="text-center">
+                          <Card.Title>{pet.name}</Card.Title>
+                          <Card.Text>{pet.description.slice(0, 40)}</Card.Text>
+                          <Button variant="info" onClick={() => handleReportFoundPet(pet)}>
+                            Report Found
+                          </Button>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </Container>
+
+              {/* <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lostPets.map((pet) => (
+                    <tr key={pet.id}>
+                      <td>{pet.id}</td>
+                      <td>{pet.name}</td>
+                      <td>{pet.description}</td>
+                      <td>
+                        <Button variant="info" onClick={() => handleReportFoundPet(pet)}>
+                          Report Found
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table> */}
+              <hr />
+              <h4>Report a Lost Pet</h4>
+              <Button variant="warning" onClick={() => setShowLostPetModal(true)}>Report Lost Pet</Button>
+            </>
+          )}
+        </Col>
+      </Row>
+
+      {/* Modal for Pet Adoption Form */}
+      <Modal show={showAdoptPetModal} onHide={() => setShowAdoptPetModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {selectedPetForAdoption ? `Adopt ${selectedPetForAdoption.name}` : "Adopt a Pet"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedPetForAdoption ? (
+            <Form>
+              <Form.Group>
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter your full name" />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Contact Number</Form.Label>
+                <Form.Control type="text" placeholder="Enter your phone number" />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Address</Form.Label>
+                <Form.Control type="text" placeholder="Enter your address" />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Reason for Adoption</Form.Label>
+                <Form.Control as="textarea" rows={3} placeholder="Why do you want to adopt this pet?" />
+              </Form.Group>
+            </Form>
+          ) : (
+            <p>Loading pet details...</p>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAdoptPetModal(false)}>Cancel</Button>
+          <Button variant="primary">Submit Request</Button>
+        </Modal.Footer>
+      </Modal>
+
+
+      {/* Modal for Reporting a Lost Pet*/}
+      <Modal show={showLostPetModal} onHide={() => setShowLostPetModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Report a Lost Pet</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Pet Name</Form.Label>
+              <Form.Control type="text" placeholder="Enter pet name" />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Type</Form.Label>
+              <Form.Control type="text" placeholder="Dog, Cat, etc." />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" rows={3} placeholder="Describe the pet" />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowLostPetModal(false)}>Cancel</Button>
+          <Button variant="primary">Submit</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for Reporting Found Pet */}
+      <Modal show={showFoundPetModal} onHide={() => setShowFoundPetModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Report Found Pet</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedLostPet && (
+            <>
+              <p>You are reporting <strong>{selectedLostPet.name}</strong> as found.</p>
+              <Form>
+                <Form.Group>
+                  <Form.Label>Where did you find the pet?</Form.Label>
+                  <Form.Control type="text" placeholder="Enter location" />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Additional Details</Form.Label>
+                  <Form.Control as="textarea" rows={3} placeholder="Describe the situation" />
+                </Form.Group>
+              </Form>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowFoundPetModal(false)}>Cancel</Button>
+          <Button variant="primary">Submit Report</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal for Adding Pet for Adoption */}
+      <Modal show={showAddPetModal} onHide={() => setShowAddPetModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Give a Pet for Adoption</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Pet Name</Form.Label>
+              <Form.Control type="text" placeholder="Enter pet name" />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Type</Form.Label>
+              <Form.Control type="text" placeholder="Dog, Cat, etc." />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Description</Form.Label>
+              <Form.Control as="textarea" rows={3} placeholder="Describe the pet" />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAddPetModal(false)}>Cancel</Button>
+          <Button variant="primary">Submit</Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
+  );
 }
 
 export default Profile;
