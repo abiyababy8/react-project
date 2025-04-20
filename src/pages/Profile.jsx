@@ -47,10 +47,10 @@ function Profile() {
         <Col md={3} className="sidebar">
           <h3 className="text-center">User Dashboard</h3>
           <ul className="sidebar-menu">
-            <li onClick={() => setSelectedSection("profile")}>View Profile</li>
-            <li onClick={() => setSelectedSection("myPets")}>View My Pets</li>
-            <li onClick={() => setSelectedSection("adoption")}>Adoption Section</li>
-            <li onClick={() => setSelectedSection("lostPets")}>Lost Pets Section</li>
+            <li className={selectedSection === "profile" ? "active" : ""} onClick={() => setSelectedSection("profile")}>View Profile</li>
+            <li className={selectedSection === "myPets" ? "active" : ""} onClick={() => setSelectedSection("myPets")}>View My Pets</li>
+            <li className={selectedSection === "adoption" ? "active" : ""} onClick={() => setSelectedSection("adoption")}>Adoption Section</li>
+            <li className={selectedSection === "lostPets" ? "active" : ""} onClick={() => setSelectedSection("lostPets")}>Lost Pets Section</li>
           </ul>
         </Col>
 

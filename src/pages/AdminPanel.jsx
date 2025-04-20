@@ -75,11 +75,11 @@ function AdminPanel() {
                 <Col md={3} className="sidebar">
                     <h3 className="text-center">Admin Panel</h3>
                     <ul className="sidebar-menu">
-                        <li onClick={() => setSelectedSection("users")}>Manage Users</li>
-                        <li onClick={() => setSelectedSection("pets")}>Manage Pets</li>
-                        <li onClick={() => setSelectedSection("lostPets")}>Lost Pets</li>
-                        <li onClick={() => setSelectedSection("foundPets")}>Found Pets</li>
-                        <li onClick={() => setSelectedSection("adoptions")}>Approve Adoptions</li>
+                        <li className={selectedSection === "users" ? "active" : ""} onClick={() => setSelectedSection("users")}>Manage Users</li>
+                        <li className={selectedSection === "pets" ? "active" : ""} onClick={() => setSelectedSection("pets")}>Manage Pets</li>
+                        <li className={selectedSection === "lostPets" ? "active" : ""} onClick={() => setSelectedSection("lostPets")}>Lost Pets</li>
+                        <li className={selectedSection === "foundPets" ? "active" : ""} onClick={() => setSelectedSection("foundPets")}>Found Pets</li>
+                        <li className={selectedSection === "adoptions" ? "active" : ""} onClick={() => setSelectedSection("adoptions")}>Approve Adoptions</li>
                     </ul>
                 </Col>
 
@@ -195,6 +195,40 @@ function AdminPanel() {
                                     {foundPets.map((pet) => (
                                         <tr key={pet.id}>
                                             <td>{pet.id}</td>
+                                            <td>{pet.name}</td>
+                                            <td>{pet.type}</td>
+                                            <td>{pet.status}</td>
+                                            <td>
+                                                {pet.status === "Pending" && <>
+                                                    <Button variant="success" size="sm" onClick={() => handleApproveFoundPet(pet.id)}>Approve</Button>{' '}
+                                                    <Button variant="danger" size="sm" onClick={() => handleRejectFoundPet(pet.id)}>Reject</Button>
+                                                </>}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        </>
+                    )}
+                    {selectedSection === "adoptions" && (
+                        <>
+                            <h4>Pet Adoption Approval</h4>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>User</th>
+                                        <th>Name of Pet</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {foundPets.map((pet) => (
+                                        <tr key={pet.id}>
+                                            <td>{pet.id}</td>
+                                            <td>Alan</td>
                                             <td>{pet.name}</td>
                                             <td>{pet.type}</td>
                                             <td>{pet.status}</td>

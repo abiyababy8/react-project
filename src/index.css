@@ -239,7 +239,10 @@
     background-color: var(--secondary-color);
     color: white;
   }
-  
+  .sidebar-menu li.active {
+    background-color: var(--secondary-color);
+    color: white;
+  }
   .admin-content {
     padding: 20px;
   }
