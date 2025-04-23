@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Table, Button, Container, Row, Col, Card, Form, Modal } from "react-bootstrap";
-import "../App.css";
+import "../../App.css";
 
 function Profile() {
   const [selectedSection, setSelectedSection] = useState("profile");
