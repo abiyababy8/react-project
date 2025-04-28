@@ -10,26 +10,32 @@ function Profile() {
   const [showAdoptPetModal, setShowAdoptPetModal] = useState(false);
   const [selectedLostPet, setSelectedLostPet] = useState(null);
   const [selectedPetForAdoption, setSelectedPetForAdoption] = useState(null);
+
   // Sample User Data
   const user = { username: "john_doe", email: "john@example.com", phone: "123-456-7890" };
 
-  // Sample Data for Pets
+  // Sample Data
   const myPets = [
     { id: 1, name: "Buddy", type: "Dog", description: "Golden Retriever" },
     { id: 2, name: "Whiskers", type: "Cat", description: "Playful tabby cat" }
   ];
 
-  const adoptionPets = [
-    { id: 3, name: "Luna", type: "Cat", description: "Adorable Persian cat" },
-    { id: 4, name: "Charlie", type: "Dog", description: "Friendly Beagle" }
+  const petsGivenForAdoption = [
+    { id: 10, name: "Tommy", status: "Pending" },
+    { id: 11, name: "Snowy", status: "Adopted" }
   ];
 
-  const lostPets = [
-    { id: 5, name: "Rocky", type: "Dog", description: "Black Labrador, last seen in park" },
-    { id: 6, name: "Milo", type: "Cat", description: "Grey tabby, lost near downtown" }
+  const adoptionRequests = [
+    { id: 12, petName: "Luna", status: "Pending" },
+    { id: 13, petName: "Charlie", status: "Approved" }
   ];
 
-  // Function to open the "Report Found Pet" modal
+  const myLostPets = [
+    { id: 14, name: "Rocky", foundStatus: "Not Found" },
+    { id: 15, name: "Milo", foundStatus: "Found" }
+  ];
+
+  // Functions
   const handleReportFoundPet = (pet) => {
     setSelectedLostPet(pet);
     setShowFoundPetModal(true);
@@ -49,8 +55,8 @@ function Profile() {
           <ul className="sidebar-menu">
             <li className={selectedSection === "profile" ? "active" : ""} onClick={() => setSelectedSection("profile")}>View Profile</li>
             <li className={selectedSection === "myPets" ? "active" : ""} onClick={() => setSelectedSection("myPets")}>View My Pets</li>
-            <li className={selectedSection === "adoption" ? "active" : ""} onClick={() => setSelectedSection("adoption")}>Adoption Section</li>
-            <li className={selectedSection === "lostPets" ? "active" : ""} onClick={() => setSelectedSection("lostPets")}>Lost Pets Section</li>
+            <li className={selectedSection === "adoptionStatus" ? "active" : ""} onClick={() => setSelectedSection("adoptionStatus")}>Pet Adoption Status</li>
+            <li className={selectedSection === "lostPetsStatus" ? "active" : ""} onClick={() => setSelectedSection("lostPetsStatus")}>My Lost Pets Status</li>
           </ul>
         </Col>
 
@@ -69,7 +75,6 @@ function Profile() {
           {selectedSection === "myPets" && (
             <>
               <h4>My Pets</h4>
-
               <Container>
                 <Row>
                   {myPets.map((pet) => (
@@ -78,115 +83,89 @@ function Profile() {
                         <Card.Body className="text-center">
                           <Card.Title>{pet.name}</Card.Title>
                           <Card.Text>{pet.description}</Card.Text>
-
                         </Card.Body>
                       </Card>
                     </Col>
                   ))}
                 </Row>
               </Container>
-
-              {/* <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {myPets.map((pet) => (
-                    <tr key={pet.id}>
-                      <td>{pet.id}</td>
-                      <td>{pet.name}</td>
-                      <td>{pet.type}</td>
-                      <td>{pet.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table> */}
             </>
           )}
 
-          {/* Adoption Section - Includes Adopt & Give for Adoption */}
-          {selectedSection === "adoption" && (
+          {/* Pet Adoption Status Section */}
+          {selectedSection === "adoptionStatus" && (
             <>
-              <h4>Adoption Section</h4>
-              <Row>
-                {adoptionPets.map((pet) => (
-                  <Col md={6} key={pet.id} className="mb-3">
-                    <Card>
-                      <Card.Body>
-                        <Card.Title>{pet.name}</Card.Title>
-                        <Card.Text>{pet.description}</Card.Text>
-                        <Button variant="success" onClick={() => handleAdoptPet(pet)}>Adopt</Button>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-              <hr />
-              <h4>Give a Pet for Adoption</h4>
-              <Button variant="primary" onClick={() => setShowAddPetModal(true)}>Add Pet</Button>
-            </>
-          )}
+              <h4>Pet Adoption Status</h4>
 
-          {/* Lost Pets Section - Includes View & Report Lost Pets */}
-          {selectedSection === "lostPets" && (
-            <>
-              <h4>Lost Pets Section</h4>
-
-              <Container>
-                <Row>
-                  {lostPets.map((pet) => (
-                    <Col key={pet.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                      <Card className="shadow-sm">
-                        <Card.Body className="text-center">
-                          <Card.Title>{pet.name}</Card.Title>
-                          <Card.Text>{pet.description.slice(0, 40)}</Card.Text>
-                          <Button variant="info" onClick={() => handleReportFoundPet(pet)}>
-                            Report Found
-                          </Button>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </Container>
-
-              {/* <Table striped bordered hover>
+              <h5 className="mt-4">Pets You Have Given for Adoption</h5>
+              <Table striped bordered hover>
                 <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Action</th>
+                    <th>Pet Name</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {lostPets.map((pet) => (
+                  {petsGivenForAdoption.map((pet) => (
                     <tr key={pet.id}>
-                      <td>{pet.id}</td>
                       <td>{pet.name}</td>
-                      <td>{pet.description}</td>
-                      <td>
-                        <Button variant="info" onClick={() => handleReportFoundPet(pet)}>
-                          Report Found
-                        </Button>
-                      </td>
+                      <td>{pet.status}</td>
                     </tr>
                   ))}
                 </tbody>
-              </Table> */}
-              <hr />
-              <h4>Report a Lost Pet</h4>
-              <Button variant="warning" onClick={() => setShowLostPetModal(true)}>Report Lost Pet</Button>
+              </Table>
+
+              <h5 className="mt-5">Pets You Are Adopting</h5>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Pet Name</th>
+                    <th>Request Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {adoptionRequests.map((request) => (
+                    <tr key={request.id}>
+                      <td>{request.petName}</td>
+                      <td>{request.status}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </>
+          )}
+
+          {/* My Lost Pets Status Section */}
+          {selectedSection === "lostPetsStatus" && (
+            <>
+              <h4>My Lost Pets Status</h4>
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Pet Name</th>
+                    <th>Found Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {myLostPets.map((pet) => (
+                    <tr key={pet.id}>
+                      <td>{pet.name}</td>
+                      <td>{pet.foundStatus}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+
+              <div className="mt-4">
+                <h5>Report a Lost Pet</h5>
+                <Button variant="warning" onClick={() => setShowLostPetModal(true)}>Report Lost Pet</Button>
+              </div>
             </>
           )}
         </Col>
       </Row>
 
+      {/* Modals stay as you had them (no change needed) */}
       {/* Modal for Pet Adoption Form */}
       <Modal show={showAdoptPetModal} onHide={() => setShowAdoptPetModal(false)}>
         <Modal.Header closeButton>
@@ -224,8 +203,7 @@ function Profile() {
         </Modal.Footer>
       </Modal>
 
-
-      {/* Modal for Reporting a Lost Pet*/}
+      {/* Modal for Reporting a Lost Pet */}
       <Modal show={showLostPetModal} onHide={() => setShowLostPetModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Report a Lost Pet</Modal.Title>
