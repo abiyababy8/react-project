@@ -19,8 +19,7 @@ function Home() {
           Whether you're looking to adopt a new pet, find lost pets, we've got you covered!
         </p>
         <p>
-          Join our growing community to ensure every pet finds a loving home and
-          every owner gets the best resources for their furry companion.
+          Join our growing community to ensure every pet finds a loving home.
         </p>
       </div>
 
