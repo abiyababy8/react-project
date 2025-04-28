@@ -41,6 +41,7 @@ function Login() {
         } else if (data.password.length < 6) {
             newErrors.password = "Password must be at least 6 characters.";
             valid = false;
+            
         }
 
         setErrors(newErrors);
