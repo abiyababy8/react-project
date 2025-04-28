@@ -14,7 +14,7 @@ const initialPetData = [
     { id: 4, name: 'Luna', type: 'Cat', image: persianCat, description: 'A sleepy but adorable Persian cat.', lastFoundLocation: 'Maple Drive', owner: 'Emily Davis' },
 ];
 
-function Pets() {
+function LostPets() {
     const [selectedFilter, setSelectedFilter] = useState('All');
     const [pets, setPets] = useState(initialPetData);
     const [showFoundModal, setShowFoundModal] = useState(false);
@@ -175,4 +175,4 @@ function Pets() {
     );
 }
 
-export default Pets;
+export default LostPets;

@@ -77,27 +77,39 @@ function Pets() {
         </Button>
       </div>
 
-      {/* Adopt Modal */}
-      <Modal show={showAdoptModal} onHide={() => setShowAdoptModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Adopt {selectedPet?.name}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formName">
-              <Form.Label>Your Name</Form.Label>
-              <Form.Control type="text" placeholder="Enter your name" />
-            </Form.Group>
-            <Form.Group controlId="formContact" className="mt-3">
-              <Form.Label>Contact Info</Form.Label>
-              <Form.Control type="text" placeholder="Enter your contact details" />
-            </Form.Group>
-            <Button variant="primary" className="mt-3" onClick={() => setShowAdoptModal(false)}>
-              Submit Adoption Request
-            </Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+     {/* Adopt Modal */}
+<Modal show={showAdoptModal} onHide={() => setShowAdoptModal(false)} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Adopt {selectedPet?.name}</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form>
+      <Form.Group controlId="formName">
+        <Form.Label>Your Name</Form.Label>
+        <Form.Control type="text" placeholder="Enter your name" />
+      </Form.Group>
+
+      <Form.Group controlId="formContact" className="mt-3">
+        <Form.Label>Contact Info</Form.Label>
+        <Form.Control type="text" placeholder="Enter your contact details" />
+      </Form.Group>
+
+      {/* Optional Donation Field */}
+      <Form.Group controlId="formDonation" className="mt-4">
+        <Form.Label>Support Our Rescue Efforts</Form.Label>
+        <Form.Control type="number" placeholder="Enter donation amount (₹)" min="100" />
+        <Form.Text className="text-muted">
+          Your support helps cover food, vaccinations, and rescue operations. ❤️
+        </Form.Text>
+      </Form.Group>
+
+      <Button variant="primary" className="mt-4" onClick={() => setShowAdoptModal(false)}>
+        Submit Adoption Request
+      </Button>
+    </Form>
+  </Modal.Body>
+</Modal>
+
 
       {/* Add New Pet Modal */}
       <Modal show={showAddPetModal} onHide={() => setShowAddPetModal(false)} centered>
@@ -127,7 +139,7 @@ function Pets() {
             </Form.Group>
             <Form.Group controlId="formLocation" className="mt-3">
               <Form.Label>Location</Form.Label>
-              <Form.Control type="text" placeholder="Where was the pet seen?" value={newPet.lastLocation} onChange={(e) => setNewPet({ ...newPet, lastLocation: e.target.value })} />
+              <Form.Control type="text" placeholder="Current Location of the pet" value={newPet.lastLocation} onChange={(e) => setNewPet({ ...newPet, lastLocation: e.target.value })} />
             </Form.Group>
             <Button variant="success" className="mt-3" onClick={handleAddNewPet}>
               Add Pet
