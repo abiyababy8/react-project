@@ -16,8 +16,7 @@ function Home() {
       <div className="home-content p-3">
         <p>
           PawConnect is a dedicated platform designed to bring pet lovers together.
-          Whether you're looking to adopt a new pet, connect with other pet owners,
-          or find trusted pet care services, we've got you covered!
+          Whether you're looking to adopt a new pet, find lost pets, we've got you covered!
         </p>
         <p>
           Join our growing community to ensure every pet finds a loving home and
