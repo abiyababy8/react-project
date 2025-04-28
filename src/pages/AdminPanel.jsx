@@ -16,12 +16,14 @@ function AdminPanel() {
         { id: 2, name: "Whiskers", type: "Cat", description: "Curious tabby cat", approved: false }
     ]);
 
-    const [lostPets, setLostPets] = useState([
-        { id: 1, name: "Max", type: "Dog", status: "Pending" }
+    const [lostAndFoundPets, setLostAndFoundPets] = useState([
+        { id: 1, name: "Max", type: "Dog", status: "Pending", category: "lost" },
+        { id: 2, name: "Luna", type: "Cat", status: "Pending", category: "found" }
     ]);
 
-    const [foundPets, setFoundPets] = useState([
-        { id: 1, name: "Luna", type: "Cat", status: "Pending" }
+    const [adoptions, setAdoptions] = useState([
+        { id: 1, user: "john_doe", petName: "Buddy", petType: "Dog", status: "Pending" },
+        { id: 2, user: "jane_doe", petName: "Whiskers", petType: "Cat", status: "Pending" }
     ]);
 
     // Modals
@@ -29,43 +31,100 @@ function AdminPanel() {
     const [editUser, setEditUser] = useState(null);
     const [editPet, setEditPet] = useState(null);
 
-    // Handle user actions
-    const handleDeleteUser = (id) => {
-        setUsers(users.filter(user => user.id !== id));
+    // User handlers
+    const handleAddUser = () => {
+        setEditUser({ id: users.length + 1, username: "", email: "" });
+        setEditPet(null);
+        setShowModal(true);
     };
 
     const handleEditUser = (user) => {
         setEditUser(user);
+        setEditPet(null);
         setShowModal(true);
     };
 
+    const handleDeleteUser = (id) => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            setUsers(users.filter(user => user.id !== id));
+        }
+    };
+
     const handleSaveUser = () => {
-        setUsers(users.map(user => user.id === editUser.id ? editUser : user));
+        const isExisting = users.some(u => u.id === editUser.id);
+        if (isExisting) {
+            setUsers(users.map(user => user.id === editUser.id ? editUser : user));
+        } else {
+            setUsers([...users, editUser]);
+        }
         setShowModal(false);
     };
 
+    // Pet handlers
+    const handleAddPet = () => {
+        setEditPet({ id: pets.length + 1, name: "", type: "", description: "", approved: false });
+        setEditUser(null);
+        setShowModal(true);
+    };
+
+    const handleEditPet = (pet) => {
+        setEditPet(pet);
+        setEditUser(null);
+        setShowModal(true);
+    };
+
+    const handleDeletePet = (id) => {
+        if (window.confirm("Are you sure you want to delete this pet?")) {
+            setPets(pets.filter(pet => pet.id !== id));
+        }
+    };
+
+    const handleSavePet = () => {
+        const isExisting = pets.some(p => p.id === editPet.id);
+        if (isExisting) {
+            setPets(pets.map(pet => pet.id === editPet.id ? editPet : pet));
+        } else {
+            setPets([...pets, editPet]);
+        }
+        setShowModal(false);
+    };
+
+    // Approval handlers for lost/found pets
     const handleApprovePet = (id) => {
-        setPets(pets.map(pet => pet.id === id ? { ...pet, approved: true } : pet));
+        if (window.confirm("Are you sure you want to approve this pet?")) {
+            setLostAndFoundPets(lostAndFoundPets.map(pet => pet.id === id ? { ...pet, status: "Approved" } : pet));
+        }
     };
 
     const handleRejectPet = (id) => {
-        setPets(pets.filter(pet => pet.id !== id));
+        if (window.confirm("Reject this pet report?")) {
+            setLostAndFoundPets(lostAndFoundPets.filter(pet => pet.id !== id));
+        }
     };
 
-    const handleApproveLostPet = (id) => {
-        setLostPets(lostPets.map(pet => pet.id === id ? { ...pet, status: "Approved" } : pet));
+    const handleDeleteLostFoundPet = (id) => {
+        if (window.confirm("Are you sure you want to delete this lost/found pet report?")) {
+            setLostAndFoundPets(lostAndFoundPets.filter(pet => pet.id !== id));
+        }
     };
 
-    const handleRejectLostPet = (id) => {
-        setLostPets(lostPets.filter(pet => pet.id !== id));
+    // Approval handlers for adoptions
+    const handleApproveAdoption = (id) => {
+        if (window.confirm("Are you sure you want to approve this adoption?")) {
+            setAdoptions(adoptions.map(adoption => adoption.id === id ? { ...adoption, status: "Approved" } : adoption));
+        }
     };
 
-    const handleApproveFoundPet = (id) => {
-        setFoundPets(foundPets.map(pet => pet.id === id ? { ...pet, status: "Approved" } : pet));
+    const handleRejectAdoption = (id) => {
+        if (window.confirm("Reject this adoption request?")) {
+            setAdoptions(adoptions.filter(adoption => adoption.id !== id));
+        }
     };
 
-    const handleRejectFoundPet = (id) => {
-        setFoundPets(foundPets.filter(pet => pet.id !== id));
+    const handleDeleteAdoption = (id) => {
+        if (window.confirm("Are you sure you want to delete this adoption?")) {
+            setAdoptions(adoptions.filter(adoption => adoption.id !== id));
+        }
     };
 
     return (
@@ -77,8 +136,7 @@ function AdminPanel() {
                     <ul className="sidebar-menu">
                         <li className={selectedSection === "users" ? "active" : ""} onClick={() => setSelectedSection("users")}>Manage Users</li>
                         <li className={selectedSection === "pets" ? "active" : ""} onClick={() => setSelectedSection("pets")}>Manage Pets</li>
-                        <li className={selectedSection === "lostPets" ? "active" : ""} onClick={() => setSelectedSection("lostPets")}>Lost Pets</li>
-                        <li className={selectedSection === "foundPets" ? "active" : ""} onClick={() => setSelectedSection("foundPets")}>Found Pets</li>
+                        <li className={selectedSection === "lostAndFoundPets" ? "active" : ""} onClick={() => setSelectedSection("lostAndFoundPets")}>Lost & Found Pets</li>
                         <li className={selectedSection === "adoptions" ? "active" : ""} onClick={() => setSelectedSection("adoptions")}>Approve Adoptions</li>
                     </ul>
                 </Col>
@@ -88,6 +146,7 @@ function AdminPanel() {
                     {selectedSection === "users" && (
                         <>
                             <h4>Manage Users</h4>
+                            <Button variant="primary" onClick={handleAddUser} className="mb-3">Add User</Button>
                             <Table striped bordered hover>
                                 <thead>
                                     <tr>
@@ -117,6 +176,7 @@ function AdminPanel() {
                     {selectedSection === "pets" && (
                         <>
                             <h4>Manage Pets</h4>
+                            <Button variant="primary" onClick={handleAddPet} className="mb-3">Add Pet</Button>
                             <Table striped bordered hover>
                                 <thead>
                                     <tr>
@@ -135,8 +195,8 @@ function AdminPanel() {
                                             <td>{pet.type}</td>
                                             <td>{pet.description}</td>
                                             <td>
-                                                {!pet.approved && <Button variant="success" size="sm" onClick={() => handleApprovePet(pet.id)}>Approve</Button>}{' '}
-                                                <Button variant="danger" size="sm" onClick={() => handleRejectPet(pet.id)}>Reject</Button>
+                                                <Button variant="warning" size="sm" onClick={() => handleEditPet(pet)}>Edit</Button>{' '}
+                                                <Button variant="danger" size="sm" onClick={() => handleDeletePet(pet.id)}>Delete</Button>
                                             </td>
                                         </tr>
                                     ))}
@@ -145,9 +205,9 @@ function AdminPanel() {
                         </>
                     )}
 
-                    {selectedSection === "lostPets" && (
+                    {selectedSection === "lostAndFoundPets" && (
                         <>
-                            <h4>Lost Pets Approval</h4>
+                            <h4>Lost & Found Pets Approval</h4>
                             <Table striped bordered hover>
                                 <thead>
                                     <tr>
@@ -155,21 +215,28 @@ function AdminPanel() {
                                         <th>Name</th>
                                         <th>Type</th>
                                         <th>Status</th>
+                                        <th>Category</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {lostPets.map((pet) => (
+                                    {lostAndFoundPets.map((pet) => (
                                         <tr key={pet.id}>
                                             <td>{pet.id}</td>
                                             <td>{pet.name}</td>
                                             <td>{pet.type}</td>
                                             <td>{pet.status}</td>
+                                            <td>{pet.category}</td>
                                             <td>
-                                                {pet.status === "Pending" && <>
-                                                    <Button variant="success" size="sm" onClick={() => handleApproveLostPet(pet.id)}>Approve</Button>{' '}
-                                                    <Button variant="danger" size="sm" onClick={() => handleRejectLostPet(pet.id)}>Reject</Button>
-                                                </>}
+                                                {pet.status === "Pending" && (
+                                                    <>
+                                                        <Button variant="success" size="sm" onClick={() => handleApprovePet(pet.id)}>Approve</Button>{' '}
+                                                        <Button variant="danger" size="sm" onClick={() => handleRejectPet(pet.id)}>Reject</Button>{' '}
+                                                    </>
+                                                )}
+                                                {pet.status === "Approved" && (
+                                                    <Button variant="danger" size="sm" onClick={() => handleDeleteLostFoundPet(pet.id)}>Delete</Button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -178,65 +245,38 @@ function AdminPanel() {
                         </>
                     )}
 
-                    {selectedSection === "foundPets" && (
-                        <>
-                            <h4>Found Pets Approval</h4>
-                            <Table striped bordered hover>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Type</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {foundPets.map((pet) => (
-                                        <tr key={pet.id}>
-                                            <td>{pet.id}</td>
-                                            <td>{pet.name}</td>
-                                            <td>{pet.type}</td>
-                                            <td>{pet.status}</td>
-                                            <td>
-                                                {pet.status === "Pending" && <>
-                                                    <Button variant="success" size="sm" onClick={() => handleApproveFoundPet(pet.id)}>Approve</Button>{' '}
-                                                    <Button variant="danger" size="sm" onClick={() => handleRejectFoundPet(pet.id)}>Reject</Button>
-                                                </>}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
-                        </>
-                    )}
                     {selectedSection === "adoptions" && (
                         <>
-                            <h4>Pet Adoption Approval</h4>
+                            <h4>Approve Adoptions</h4>
                             <Table striped bordered hover>
                                 <thead>
                                     <tr>
                                         <th>ID</th>
                                         <th>User</th>
-                                        <th>Name of Pet</th>
+                                        <th>Pet Name</th>
                                         <th>Type</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {foundPets.map((pet) => (
-                                        <tr key={pet.id}>
-                                            <td>{pet.id}</td>
-                                            <td>Alan</td>
-                                            <td>{pet.name}</td>
-                                            <td>{pet.type}</td>
-                                            <td>{pet.status}</td>
+                                    {adoptions.map((adoption) => (
+                                        <tr key={adoption.id}>
+                                            <td>{adoption.id}</td>
+                                            <td>{adoption.user}</td>
+                                            <td>{adoption.petName}</td>
+                                            <td>{adoption.petType}</td>
+                                            <td>{adoption.status}</td>
                                             <td>
-                                                {pet.status === "Pending" && <>
-                                                    <Button variant="success" size="sm" onClick={() => handleApproveFoundPet(pet.id)}>Approve</Button>{' '}
-                                                    <Button variant="danger" size="sm" onClick={() => handleRejectFoundPet(pet.id)}>Reject</Button>
-                                                </>}
+                                                {adoption.status === "Pending" && (
+                                                    <>
+                                                        <Button variant="success" size="sm" onClick={() => handleApproveAdoption(adoption.id)}>Approve</Button>{' '}
+                                                        <Button variant="danger" size="sm" onClick={() => handleRejectAdoption(adoption.id)}>Reject</Button>{' '}
+                                                    </>
+                                                )}
+                                                {adoption.status === "Approved" && (
+                                                    <Button variant="danger" size="sm" onClick={() => handleDeleteAdoption(adoption.id)}>Delete</Button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
@@ -246,6 +286,72 @@ function AdminPanel() {
                     )}
                 </Col>
             </Row>
+
+            {/* Modal for Add/Edit */}
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        {editUser ? (editUser.username ? "Edit User" : "Add User") : editPet ? (editPet.name ? "Edit Pet" : "Add Pet") : ""}
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        {editUser && (
+                            <>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={editUser.username}
+                                        onChange={(e) => setEditUser({ ...editUser, username: e.target.value })}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type="email"
+                                        value={editUser.email}
+                                        onChange={(e) => setEditUser({ ...editUser, email: e.target.value })}
+                                    />
+                                </Form.Group>
+                            </>
+                        )}
+                        {editPet && (
+                            <>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={editPet.name}
+                                        onChange={(e) => setEditPet({ ...editPet, name: e.target.value })}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Type</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={editPet.type}
+                                        onChange={(e) => setEditPet({ ...editPet, type: e.target.value })}
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Description</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        value={editPet.description}
+                                        onChange={(e) => setEditPet({ ...editPet, description: e.target.value })}
+                                    />
+                                </Form.Group>
+                            </>
+                        )}
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+                    <Button variant="primary" onClick={handleSaveUser || handleSavePet}>Save</Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }

@@ -40,6 +40,7 @@ function Nav() {
                         <div className="dropdown-menu-custom">
                             <Link to="/admin" className="dropdown-items">Admin</Link>
                             <Link to="/user-home" className="dropdown-items">User</Link>
+                            <Link to="/shelterpanel" className="dropdown-items">Shelter</Link>
                             <Link to="/login" className="dropdown-items">Log In</Link>
                             <Link to="/register" className="dropdown-items">Register</Link>
                         </div>

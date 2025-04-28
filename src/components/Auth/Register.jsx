@@ -9,6 +9,7 @@ function Register() {
     const [data, setData] = useState({
         username: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: ''
     });
@@ -16,6 +17,7 @@ function Register() {
     const [errors, setErrors] = useState({
         username: '',
         email: '',
+        phone: '',
         password: '',
         confirmPassword: ''
     });
@@ -31,7 +33,7 @@ function Register() {
     const handleRegister = (e) => {
         e.preventDefault();
         let valid = true;
-        let newErrors = { username: '', email: '', password: '', confirmPassword: '' };
+        let newErrors = { username: '', email: '', phone: '', password: '', confirmPassword: '' };
 
         if (data.username.trim() === '') {
             newErrors.username = 'Username is required.';
@@ -45,6 +47,18 @@ function Register() {
             newErrors.email = 'Invalid email format.';
             valid = false;
         }
+
+        if (data.phone.trim() === '') {
+            newErrors.phone = 'Phone number is required.';
+            valid = false;
+        } else if (data.phone.trim().length < 10) {
+            newErrors.phone = 'Phone number must be at least 10 digits long.';
+            valid = false;
+        } else if (!/^[789]\d{9}$/.test(data.phone.trim())) {
+            newErrors.phone = 'Invalid Indian phone number format. It should start with 7, 8, or 9 and be 10 digits long.';
+            valid = false;
+        }
+                
 
         if (data.password.length < 6) {
             newErrors.password = 'Password must be at least 6 characters.';
@@ -96,6 +110,20 @@ function Register() {
                                     onChange={handleInputChange}
                                 />
                                 {errors.email && <small className="text-danger">{errors.email}</small>}
+                            </Col>
+                        </Form.Group>
+
+                        <Form.Group as={Row} className="mb-3">
+                            <Form.Label column sm={3}>Phone:</Form.Label>
+                            <Col sm={9}>
+                                <Form.Control
+                                    type="tel"
+                                    placeholder="Enter phone number"
+                                    name="phone"
+                                    value={data.phone}
+                                    onChange={handleInputChange}
+                                />
+                                {errors.phone && <small className="text-danger">{errors.phone}</small>}
                             </Col>
                         </Form.Group>
 

@@ -14,6 +14,7 @@ import UserHome from "./pages/User/UserHome";
 import Pets from "./pages/Pets";
 import PetDetails from "./pages/PetDetails";
 import LostPets from "./pages/LostPets";
+import ShelterPanel from "./pages/ShelterPanel";
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/profile" element={<Profile/>} />
+        <Route path="/shelterpanel" element={<ShelterPanel/>}/>
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
         <Route path="/user-home" element={<UserHome/>} />
