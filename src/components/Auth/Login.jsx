@@ -3,6 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
     const [data, setData] = useState({
@@ -22,6 +23,7 @@ function Login() {
         // Clear errors when user starts typing
         setErrors({ ...errors, [name]: "" });
     };
+    const navigate = useNavigate()
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -46,6 +48,7 @@ function Login() {
         if (valid) {
             alert("Logging in....");
             // Proceed with login logic (API call, authentication, etc.)
+            navigate('/user-home')
         }
     };
 
@@ -60,12 +63,12 @@ function Login() {
                             <Form.Group as={Row} className="mb-3" controlId="formHorizontalEmail">
                                 <Form.Label column sm={2}>Username:</Form.Label>
                                 <Col sm={10}>
-                                    <Form.Control 
-                                        type="text" 
-                                        placeholder="Username" 
-                                        name="username" 
-                                        value={data.username} 
-                                        onChange={handleInputChange} 
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Username"
+                                        name="username"
+                                        value={data.username}
+                                        onChange={handleInputChange}
                                     />
                                     {errors.username && <small className="text-danger">{errors.username}</small>}
                                 </Col>
@@ -74,12 +77,12 @@ function Login() {
                             <Form.Group as={Row} className="mb-3" controlId="formHorizontalPassword">
                                 <Form.Label column sm={2}>Password:</Form.Label>
                                 <Col sm={10}>
-                                    <Form.Control 
-                                        type="password" 
-                                        placeholder="Password" 
-                                        name="password" 
-                                        value={data.password} 
-                                        onChange={handleInputChange} 
+                                    <Form.Control
+                                        type="password"
+                                        placeholder="Password"
+                                        name="password"
+                                        value={data.password}
+                                        onChange={handleInputChange}
                                     />
                                     {errors.password && <small className="text-danger">{errors.password}</small>}
                                 </Col>
