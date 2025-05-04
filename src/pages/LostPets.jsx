@@ -75,7 +75,7 @@ function LostPets() {
                                 <Card.Text>{pet.description.slice(0, 28)}...</Card.Text>
                                 <Card.Text><strong>Last Seen:</strong> {pet.lastFoundLocation}</Card.Text>
                                 <Card.Text><strong>Owner:</strong> {pet.owner}</Card.Text>
-                                <Button variant="info" onClick={() => handleFoundClick(pet.id)}>Found</Button>
+                                <Button variant="info" onClick={() => handleFoundClick(pet.id)}>Report Found</Button>
                             </Card.Body>
                         </Card>
                     </Col>
