@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "./userhome.css"; // Import CSS for popup animation
 
 function UserHome() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(sessionStorage.getItem("user"));
   const navigate = useNavigate();
 
   const [showMissingPopup, setShowMissingPopup] = useState(false);
@@ -50,7 +50,7 @@ function UserHome() {
 
   return (
     <div className="container py-5 text-center position-relative">
-      <h2 className="mb-3">Welcome back, {user?.name || "Pet Lover"}! 🐾</h2>
+      <h2 className="mb-3">Welcome back, {user?.username.toUpperCase() || "Pet Lover"}! 🐾</h2>
       <p className="lead">We're glad to see you again! Here's what you can do today:</p>
 
       {/* User Pets Section */}

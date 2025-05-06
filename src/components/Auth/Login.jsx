@@ -4,7 +4,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
-
+import { loginApi } from '../../services/allApi';
+//import { ToastContainer, toast } from 'react-toastify';
 function Login() {
     const [data, setData] = useState({
         username: "",
@@ -25,7 +26,7 @@ function Login() {
     };
     const navigate = useNavigate()
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
         let valid = true;
         let newErrors = { username: "", password: "" };
@@ -43,19 +44,43 @@ function Login() {
             valid = false;
 
         }
-        if (data.username === "admin" && data.password === "admin123") {
-            valid = false
-            navigate('/admin')
-            alert("Welcome Admin!")
+        if (data.username === "admin" && data.password === "admin@123") {
+            sessionStorage.setItem("user", JSON.stringify({ role: "admin", username: data.username }));
+            alert("Welcome Admin!");
+            navigate('/admin');
+            return;
         }
+        
+        if (data.username === "shelter" && data.password === "shelter@123") {
+            sessionStorage.setItem("user", JSON.stringify({ role: "shelter", username: data.username }));
+            alert("Welcome Shelter!");
+            navigate('/shelterpanel');
+            return;
+        }
+        
         setErrors(newErrors);
-
+        
         if (valid) {
+            const result = await loginApi(data)
+            // Save to session storage
+            sessionStorage.setItem("user", JSON.stringify({ role: "user", username: data.username }));
+        
             alert("Logging in....");
-            // Proceed with login logic (API call, authentication, etc.)
-            navigate('/user-home')
+            navigate('/user-home');
         }
+        
     };
+    const handleClear = () => {
+        setData({
+            username: '',
+            password: ''
+        });
+        setErrors({
+            username: '',
+            password: ''
+        });
+    };
+    
 
     return (
         <>
@@ -96,10 +121,12 @@ function Login() {
                             <p className="text-center">New here? <a href="/register">Register here</a></p>
 
                             <Form.Group as={Row} className="mb-3">
-                                <Col sm={{ span: 10, offset: 2 }} className="d-flex justify-content-end">
-                                    <Button type="submit">Log In</Button>
-                                </Col>
-                            </Form.Group>
+                            <Col className="d-flex justify-content-end">
+                                <Button variant="warning" type="button" onClick={handleClear} className='me-2'>Clear</Button>
+                                <Button variant="primary" type="submit">Log In</Button>
+                            </Col>
+                        </Form.Group>
+
                         </Form>
                     </div>
                     <div className="col-md-3"></div>

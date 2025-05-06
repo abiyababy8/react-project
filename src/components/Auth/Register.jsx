@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
+import { registerApi } from '../../services/allApi';
 
 function Register() {
     const [data, setData] = useState({
@@ -30,7 +31,7 @@ function Register() {
         setErrors({ ...errors, [name]: '' });
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
         let valid = true;
         let newErrors = { username: '', email: '', phone: '', password: '', confirmPassword: '' };
@@ -58,7 +59,7 @@ function Register() {
             newErrors.phone = 'Invalid Indian phone number format. It should start with 7, 8, or 9 and be 10 digits long.';
             valid = false;
         }
-                
+
 
         if (data.password.length < 6) {
             newErrors.password = 'Password must be at least 6 characters.';
@@ -73,10 +74,28 @@ function Register() {
         setErrors(newErrors);
 
         if (valid) {
+            const result = await registerApi(data)
             alert('Registered Successfully!');
             navigate('/login');
         }
     };
+    const handleClear = () => {
+        setData({
+            username: '',
+            email: '',
+            phone: '',
+            password: '',
+            confirmPassword: ''
+        });
+        setErrors({
+            username: '',
+            email: '',
+            phone: '',
+            password: '',
+            confirmPassword: ''
+        });
+    };
+    
 
     return (
         <div className="container">
@@ -158,10 +177,12 @@ function Register() {
                         <p className="text-center">Already registered? <a href="/login">Login here</a></p>
 
                         <Form.Group as={Row} className="mb-3">
-                            <Col sm={{ span: 9, offset: 3 }} className="d-flex justify-content-end">
-                                <Button type="submit">Register</Button>
+                            <Col className="d-flex justify-content-end">
+                                <Button variant="warning" type="button" onClick={handleClear} className='me-2'>Clear</Button>
+                                <Button variant="primary" type="submit">Register</Button>
                             </Col>
                         </Form.Group>
+
                     </Form>
                 </div>
                 <div className="col-md-3"></div>

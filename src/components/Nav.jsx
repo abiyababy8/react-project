@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 function Nav() {
     const [showDropDown, setShowDropDown] = useState(false);
     const dropdownRef = useRef(null);
-
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    const role = user?.role
+    const username = user?.username.toUpperCase()
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -22,27 +24,31 @@ function Nav() {
         <>
             <div className="nav-bar d-flex justify-content-between">
                 <div className='d-flex'>
-                    <Link to={'/'}>
-                        <i className="fa-solid fa-paw nav-bar-brand fa-beat m-1 fa-2x"></i>
-                    </Link>
-
-                    <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>
-                        <h3 className='m-1'>PawConnect</h3>
-                    </Link>
+                    <i className="fa-solid fa-paw nav-bar-brand fa-beat mt-3 me-2 ms-2 fa-2x"></i>
+                    <h3 className='mt-3'>PawConnect</h3>
                 </div>
                 <div className="user-dropdown position-relative" ref={dropdownRef}>
-                    <i 
-                        className="fa-solid fa-user fa-2x" 
+                    <i
+                        className="fa-solid fa-user fa-2x"
                         onClick={() => setShowDropDown(!showDropDown)}
                         style={{ cursor: 'pointer' }}
                     ></i>
+                    <br />
+                    <span className='me-2'>{username}</span>
                     {showDropDown && (
                         <div className="dropdown-menu-custom">
-                            <Link to="/admin" className="dropdown-items">Admin</Link>
-                            <Link to="/user-home" className="dropdown-items">User</Link>
-                            <Link to="/shelterpanel" className="dropdown-items">Shelter</Link>
-                            <Link to="/login" className="dropdown-items">Log In</Link>
-                            <Link to="/register" className="dropdown-items">Register</Link>
+                            {role === 'user' ? (
+                                <>
+                                    <Link to="/profile" className="dropdown-items">My Profile</Link>
+                                    <Link to="/" className="dropdown-items" onClick={() => sessionStorage.clear()}>Log Out</Link>
+                                </>
+                            ) : role === 'admin' || role === 'shelter' ? (
+                                <Link to="/" className="dropdown-items" onClick={() => sessionStorage.clear()}>Log Out</Link>
+                            ) : (
+                                <Link to="/login" className="dropdown-items">Log In</Link>
+                            )}
+
+
                         </div>
                     )}
                 </div>
