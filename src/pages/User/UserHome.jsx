@@ -96,7 +96,6 @@ function UserHome() {
                 <div className="card-footer bg-transparent border-0 text-center">
                   <button
                     className="btn btn-outline-primary btn-sm"
-                    // Navigate to pet details page
                   >
                     Edit Details
                   </button>

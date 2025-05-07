@@ -5,7 +5,8 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useNavigate } from 'react-router-dom';
 import { loginApi } from '../../services/allApi';
-//import { ToastContainer, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+
 function Login() {
     const [data, setData] = useState({
         username: "",
@@ -46,29 +47,28 @@ function Login() {
         }
         if (data.username === "admin" && data.password === "admin@123") {
             sessionStorage.setItem("user", JSON.stringify({ role: "admin", username: data.username }));
-            alert("Welcome Admin!");
-            navigate('/admin');
+            toast.success("Welcome Admin!");
+            setTimeout(() => navigate('/admin'), 1000);
             return;
         }
-        
+
         if (data.username === "shelter" && data.password === "shelter@123") {
             sessionStorage.setItem("user", JSON.stringify({ role: "shelter", username: data.username }));
-            alert("Welcome Shelter!");
-            navigate('/shelterpanel');
+            toast.success("Welcome Shelter!");
+            setTimeout(() => navigate('/shelterpanel'), 1000);
             return;
         }
-        
+
         setErrors(newErrors);
-        
+
         if (valid) {
             const result = await loginApi(data)
             // Save to session storage
             sessionStorage.setItem("user", JSON.stringify({ role: "user", username: data.username }));
-        
-            alert("Logging in....");
-            navigate('/user-home');
+            toast.success(`Welcome ${data.username}!`);
+            setTimeout(() => navigate('/user-home'), 1000);
         }
-        
+
     };
     const handleClear = () => {
         setData({
@@ -80,7 +80,7 @@ function Login() {
             password: ''
         });
     };
-    
+
 
     return (
         <>
@@ -121,17 +121,29 @@ function Login() {
                             <p className="text-center">New here? <a href="/register">Register here</a></p>
 
                             <Form.Group as={Row} className="mb-3">
-                            <Col className="d-flex justify-content-end">
-                                <Button variant="warning" type="button" onClick={handleClear} className='me-2'>Clear</Button>
-                                <Button variant="primary" type="submit">Log In</Button>
-                            </Col>
-                        </Form.Group>
+                                <Col className="d-flex justify-content-end">
+                                    <Button variant="warning" type="button" onClick={handleClear} className='me-2'>Clear</Button>
+                                    <Button variant="primary" type="submit">Log In</Button>
+                                </Col>
+                            </Form.Group>
 
                         </Form>
                     </div>
                     <div className="col-md-3"></div>
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </>
     );
 }
