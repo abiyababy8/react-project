@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Button, Container, Row, Col, Card, Form, Modal } from "react-bootstrap";
 import "../../App.css";
+import { getUserDetailsApi } from "../../services/allApi";
 
 function Profile() {
   const [selectedSection, setSelectedSection] = useState("profile");
@@ -10,15 +11,30 @@ function Profile() {
   const [showAdoptPetModal, setShowAdoptPetModal] = useState(false);
   const [selectedLostPet, setSelectedLostPet] = useState(null);
   const [selectedPetForAdoption, setSelectedPetForAdoption] = useState(null);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const [userDetails, setUserDetails] = useState([])
+  const getUserDetails = async () => {
+    const token = sessionStorage.getItem("token")
+    const requestHeader = {
+      "Content-Type": 'application/json',
+      "Authorization": `Bearer ${token}`
+    }
+    const result = await getUserDetailsApi(requestHeader)
+    console.log("User Details:", result.data)
+    setUserDetails(result.data)
+  }
+  useEffect(() => {
+    getUserDetails()
+  }, [])
 
   // Sample User Data
   const user = { username: "john_doe", email: "john@example.com", phone: "123-456-7890" };
 
   // Sample Data
-  const myPets = [
-    { id: 1, name: "Buddy", type: "Dog", description: "Golden Retriever" },
-    { id: 2, name: "Whiskers", type: "Cat", description: "Playful tabby cat" }
-  ];
 
   const petsGivenForAdoption = [
     { id: 10, name: "Tommy", status: "Pending" },
@@ -54,7 +70,6 @@ function Profile() {
           <h3 className="text-center">User Dashboard</h3>
           <ul className="sidebar-menu">
             <li className={selectedSection === "profile" ? "active" : ""} onClick={() => setSelectedSection("profile")}>View Profile</li>
-            <li className={selectedSection === "myPets" ? "active" : ""} onClick={() => setSelectedSection("myPets")}>View My Pets</li>
             <li className={selectedSection === "adoptionStatus" ? "active" : ""} onClick={() => setSelectedSection("adoptionStatus")}>Pet Adoption Status</li>
             <li className={selectedSection === "lostPetsStatus" ? "active" : ""} onClick={() => setSelectedSection("lostPetsStatus")}>My Lost Pets Status</li>
           </ul>
@@ -65,32 +80,21 @@ function Profile() {
           {selectedSection === "profile" && (
             <Card className="p-4">
               <h4>Profile Information</h4>
-              <p><strong>Username:</strong> {user.username}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Phone:</strong> {user.phone}</p>
-              <Button variant="primary">Edit Profile</Button>
+              {
+                userDetails?.length > 0 ?
+                  userDetails.map(item => (
+                    <>
+                      <p><strong>Username:</strong> {item.username}</p>
+                      <p><strong>Email:</strong> {item.email}</p>
+                      <p><strong>Phone:</strong> {item.phone}</p>
+                    </>
+                  )) :
+                  <p>NO USER DETAILS FOUND!</p>
+              }
+              <Button variant="primary" onClick={handleShow}>Edit Profile</Button>
             </Card>
           )}
 
-          {selectedSection === "myPets" && (
-            <>
-              <h4>My Pets</h4>
-              <Container>
-                <Row>
-                  {myPets.map((pet) => (
-                    <Col key={pet.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                      <Card className="shadow-sm">
-                        <Card.Body className="text-center">
-                          <Card.Title>{pet.name}</Card.Title>
-                          <Card.Text>{pet.description}</Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              </Container>
-            </>
-          )}
 
           {/* Pet Adoption Status Section */}
           {selectedSection === "adoptionStatus" && (
@@ -159,9 +163,34 @@ function Profile() {
           )}
         </Col>
       </Row>
-
-     
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>EDIT YOUR PROFILE INFORMATION</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Username" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" placeholder="Email" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Phone Number</Form.Label>
+              <Form.Control type="number" placeholder="Phone number" />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
+
   );
 }
 
