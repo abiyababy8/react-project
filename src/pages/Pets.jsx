@@ -20,7 +20,8 @@ function Pets() {
   const [showAdoptModal, setShowAdoptModal] = useState(false);
   const [showAddPetModal, setShowAddPetModal] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
-  const [newPet, setNewPet] = useState({ name: '', type: '', description: '', owner: '', lastLocation: '', image: '' });
+  const [newPet, setNewPet] = useState({ name: '', type: '', description: '', owner: '', lastLocation: '', image: null });
+  const [imagePreview, setImagePreview] = useState(null);
 
   // Filter Pets
   const filteredPets = selectedFilter === 'All'
@@ -35,9 +36,9 @@ function Pets() {
 
   // Handle Add New Pet
   const handleAddNewPet = () => {
-    const newPetWithId = { ...newPet, id: petData.length + 1, image: goldenRetriever }; // Dummy image for now
+    const newPetWithId = { ...newPet, id: petData.length + 1 };
     setPetData([...petData, newPetWithId]);
-    setNewPet({ name: '', type: '', description: '', owner: '', lastLocation: '', image: '' });
+    //setNewPet({ name: '', type: '', description: '', owner: '', lastLocation: '', image: '' });
     setShowAddPetModal(false);
   };
 
@@ -77,38 +78,38 @@ function Pets() {
         </Button>
       </div>
 
-     {/* Adopt Modal */}
-<Modal show={showAdoptModal} onHide={() => setShowAdoptModal(false)} centered>
-  <Modal.Header closeButton>
-    <Modal.Title>Adopt {selectedPet?.name}</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Form>
-      <Form.Group controlId="formName">
-        <Form.Label>Your Name</Form.Label>
-        <Form.Control type="text" placeholder="Enter your name" />
-      </Form.Group>
+      {/* Adopt Modal */}
+      <Modal show={showAdoptModal} onHide={() => setShowAdoptModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Adopt {selectedPet?.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formName">
+              <Form.Label>Your Name</Form.Label>
+              <Form.Control type="text" placeholder="Enter your name" />
+            </Form.Group>
 
-      <Form.Group controlId="formContact" className="mt-3">
-        <Form.Label>Contact Info</Form.Label>
-        <Form.Control type="text" placeholder="Enter your contact details" />
-      </Form.Group>
+            <Form.Group controlId="formContact" className="mt-3">
+              <Form.Label>Contact Info</Form.Label>
+              <Form.Control type="text" placeholder="Enter your contact details" />
+            </Form.Group>
 
-      {/* Optional Donation Field */}
-      <Form.Group controlId="formDonation" className="mt-4">
-        <Form.Label>Support Our Rescue Efforts</Form.Label>
-        <Form.Control type="number" placeholder="Enter donation amount (₹)" min="100" />
-        <Form.Text className="text-muted">
-          Your support helps cover food, vaccinations, and rescue operations. ❤️
-        </Form.Text>
-      </Form.Group>
+            {/* Optional Donation Field */}
+            <Form.Group controlId="formDonation" className="mt-4">
+              <Form.Label>Support Our Rescue Efforts</Form.Label>
+              <Form.Control type="number" placeholder="Enter donation amount (₹)" min="100" />
+              <Form.Text className="text-muted">
+                Your support helps cover food, vaccinations, and rescue operations. ❤️
+              </Form.Text>
+            </Form.Group>
 
-      <Button variant="primary" className="mt-4" onClick={() => setShowAdoptModal(false)}>
-        Submit Adoption Request
-      </Button>
-    </Form>
-  </Modal.Body>
-</Modal>
+            <Button variant="primary" className="mt-4" onClick={() => setShowAdoptModal(false)}>
+              Submit Adoption Request
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
 
       {/* Add New Pet Modal */}
@@ -141,6 +142,38 @@ function Pets() {
               <Form.Label>Location</Form.Label>
               <Form.Control type="text" placeholder="Current Location of the pet" value={newPet.lastLocation} onChange={(e) => setNewPet({ ...newPet, lastLocation: e.target.value })} />
             </Form.Group>
+            <Form.Group controlId="formLocation" className="mt-3">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                placeholder="Image of the Pet"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setNewPet({ ...newPet, image: file });
+                  if (file) {
+                    setImagePreview(URL.createObjectURL(file));
+                  } else {
+                    setImagePreview(null);
+                  }
+                }}
+              />
+              {newPet.image && (
+                <>
+                  <Form.Text className="text-muted">
+                    Selected file: {newPet.image.name}
+                  </Form.Text>
+                  <div className="mt-2">
+                    <img
+                      src={imagePreview}
+                      alt="Pet Preview"
+                      style={{ maxWidth: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+                    />
+                  </div>
+                </>
+              )}
+            </Form.Group>
+
             <Button variant="success" className="mt-3" onClick={handleAddNewPet}>
               Add Pet
             </Button>

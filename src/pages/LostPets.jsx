@@ -22,6 +22,8 @@ function LostPets() {
     const [selectedPetId, setSelectedPetId] = useState(null);
     const [foundLocation, setFoundLocation] = useState('');
     const [newLostPet, setNewLostPet] = useState({ name: '', type: '', description: '', owner: '', lastFoundLocation: '', image: '' });
+    const [imagePreview, setImagePreview] = useState(null);
+
 
     const handleFoundClick = (petId) => {
         setSelectedPetId(petId);
@@ -29,7 +31,7 @@ function LostPets() {
     };
 
     const handleFoundSubmit = () => {
-        const updatedPets = pets.map(pet => 
+        const updatedPets = pets.map(pet =>
             pet.id === selectedPetId ? { ...pet, lastFoundLocation: foundLocation } : pet
         );
         setPets(updatedPets);
@@ -164,6 +166,38 @@ function LostPets() {
                                 onChange={(e) => setNewLostPet({ ...newLostPet, lastFoundLocation: e.target.value })}
                             />
                         </Form.Group>
+                        <Form.Group controlId="petImage" className="mt-2">
+                            <Form.Label>Upload Image of the Pet</Form.Label>
+                            <Form.Control
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    setNewLostPet({ ...newLostPet, image: file });
+                                    if (file) {
+                                        setImagePreview(URL.createObjectURL(file));
+                                    } else {
+                                        setImagePreview(null);
+                                    }
+                                }}
+                            />
+                            {newLostPet.image && (
+                                <>
+                                    <Form.Text className="text-muted">
+                                        Selected file: {newLostPet.image.name}
+                                    </Form.Text>
+                                    <div className="mt-2">
+                                        <img
+                                            src={imagePreview}
+                                            alt="Preview"
+                                            style={{ maxWidth: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+                                        />
+                                    </div>
+                                </>
+                            )}
+                        </Form.Group>
+
+
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

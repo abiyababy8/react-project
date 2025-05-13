@@ -13,6 +13,10 @@ function UserHome() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [petImage, setPetImage] = useState(null);
+  const [petImagePreview, setPetImagePreview] = useState(null);
+  const [showAddPetModal, setShowAddPetModal] = useState(false);
+
   const userPets = [
     {
       id: 1,
@@ -111,6 +115,11 @@ function UserHome() {
         </div>
       </div>
 
+      <div className="text-center mt-4 mb-4">
+        <Button variant="warning" onClick={() => setShowAddPetModal(true)}>Add a New Pet</Button>
+      </div>
+
+
       {/* 🔔 Missing Pet Popup */}
       <div
         className={`popup ${showMissingPopup ? "show" : ""}`}
@@ -158,6 +167,83 @@ function UserHome() {
           style={{ cursor: "pointer", width: "100%", borderRadius: "8px" }}
         />
       </div>
+
+      <Modal show={showAddPetModal} onHide={() => setShowAddPetModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>ADD A NEW PET</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="newPetName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control type="text" placeholder="Name" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="newPetType">
+              <Form.Label>Type</Form.Label>
+              <Form.Control type="text" placeholder="Type" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="newPetAge">
+              <Form.Label>Age</Form.Label>
+              <Form.Control type="text" placeholder="Age" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="newPetHealth">
+              <Form.Label>Health</Form.Label>
+              <Form.Control type="text" placeholder="Health" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="newPetVet">
+              <Form.Label>Next Vet Appointment</Form.Label>
+              <Form.Control type="date" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="newPetVaccinations">
+              <Form.Label>Vaccinations</Form.Label>
+              <Form.Control type="text" placeholder="Vaccinations" />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="newPetImage">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setPetImage(file);
+                  if (file) {
+                    setPetImagePreview(URL.createObjectURL(file));
+                  } else {
+                    setPetImagePreview(null);
+                  }
+                }}
+              />
+              {petImage && (
+                <>
+                  <Form.Text className="text-muted">
+                    Selected file: {petImage.name}
+                  </Form.Text>
+                  <div className="mt-2">
+                    <img
+                      src={petImagePreview}
+                      alt="Pet Preview"
+                      style={{ maxWidth: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+                    />
+                  </div>
+                </>
+              )}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowAddPetModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => {
+            // TODO: handle form submission logic here
+            setShowAddPetModal(false);
+          }}>
+            Add Pet
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>EDIT YOUR PET'S DETAILS</Modal.Title>
@@ -187,6 +273,37 @@ function UserHome() {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Vaccinations</Form.Label>
               <Form.Control type="text" placeholder="Vaccinations" />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setPetImage(file);
+                  if (file) {
+                    setPetImagePreview(URL.createObjectURL(file));
+                  } else {
+                    setPetImagePreview(null);
+                  }
+                }}
+              />
+              {petImage && (
+                <>
+                  <Form.Text className="text-muted">
+                    Selected file: {petImage.name}
+                  </Form.Text>
+                  <div className="mt-2">
+                    <img
+                      src={petImagePreview}
+                      alt="Pet Preview"
+                      style={{ maxWidth: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px' }}
+                    />
+                  </div>
+                </>
+              )}
             </Form.Group>
 
           </Form>
